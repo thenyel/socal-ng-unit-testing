@@ -1,35 +1,34 @@
 'use strict';
 
 angular.module('testingApp')
-  .factory('Collection', function ($http) {
+  .factory('Collection', function () {
 
-    function Collection (url) {
-      var self = this;
+    /**
+     * new Collection(Person)
+     *   = {value: [new Person(), new Person(), new Person()]}
+     */
 
+    function Collection (model) {
+      this.model = model;
       this.value = [];
-
-      if (typeof url === "string") {
-        $http({
-          method: "GET",
-          url: url
-        }).success(function (data) {
-          if (data instanceof Array) {
-            self.value = data;
-          }
-        })
-
-      }
     }
 
     Collection.prototype.add = function(val) {
-      this.value.push(val);
-
+      this.value.push(new this.model(val));
     };
 
-    Collection.prototype.remove = function(arg) {
-      if (typeof arg === "number") {
-        this.value.splice(arg, 1);
+    Collection.prototype.remove = function(index) {
+      if (this.value.length >= index + 1) {
+        this.value.splice(index, 1);
       }
+    };
+
+    Collection.prototype.validate = function() {
+      this.value.forEach(function (val) {
+        if (typeof val.validate === "function") {
+          val.validate();
+        }
+      })
       
     };
 

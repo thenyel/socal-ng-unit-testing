@@ -1,62 +1,84 @@
 'use strict';
 
-describe('Factory: Collection', function () {
+describe('Service: Collection', function () {
 
   // load the service's module
   beforeEach(module('testingApp'));
 
   // instantiate service
-  var Collection, sample;
-  var $httpBackend;
+  var Collection, Person, 
+      persons;
   beforeEach(inject(function ($injector) {
     Collection = $injector.get("Collection");
-    $httpBackend = $injector.get("$httpBackend");
 
-    sample = new Collection();
+    Person = function Person (data) {
+      this.id = data.id || 0;
+      this.name = data.name || "";
+      this.validate = function () {}
+    }
+
+    persons = new Collection(Person);
+
+    // Setup sample data
+    persons.add({id: 1, name: "Danniel"});
+    persons.add({id: 2, name: "John"});
+    persons.add({id: 3, name: "Jane"});
+    persons.add({id: 4, name: "Alex"});
+
   }));
 
-  it("should be a factory", function() {
-    expect(typeof Collection).toEqual("function");
+  it('should do something', function () {
+    expect(!!Collection).toBe(true);
   });
 
   describe("init", function() {
-    it("should have an empty Collection.value", function() {
-      expect(sample.value).toEqual([])
+    it("should set Collection.model = `Constructor`", function() {
+      expect(persons.model).toEqual(Person);
     });
 
-    it("should get value form AJAX request when url provided", function() {
-      var urlData = ["test", "aaa", "bbb"];
-      $httpBackend.expectGET("some_url/sample.json").respond(200, urlData);
-
-      // Should call GET request
-      sample = new Collection("some_url/sample.json");
-
-      // !!! Flush GET request
-      $httpBackend.flush();
-
-      expect(sample.value).toEqual(urlData);
+    it("should set Collection.value = []", function() {
+      expect(persons.value instanceof Array).toEqual(true)
     });
   });
 
   describe("add", function() {
-    it("should add to  Collection.value", function() {
-      expect(sample.value).toEqual([]);
-      sample.add("test");
+    it("should add new `model instance` to value[]", function() {
+      persons.add({id: 5, name: "Jason"});
 
-      expect(sample.value[0]).toEqual("test");
+      expect(persons.value.length).toEqual(5);
+      expect(persons.value[4].name).toEqual("Jason");
+      expect(persons.value[0] instanceof Person).toBeTruthy();
     });
   });
 
   describe("remove", function() {
-    it("should remove the item in the specified index", function() {
-      sample.add(0);
-      sample.add(1);
-      sample.add(2);
+    it("should remove the item of the specified index", function() {
+      expect(persons.value.length).toEqual(4);
 
-      sample.remove(1);
+      // Remove Third element
+      persons.remove(2);
+      expect(persons.value.length).toEqual(3);
 
-      expect(sample.value).toEqual([0, 2]);
+      // New third element should be alex
+      expect(persons.value[2].name).toEqual("Alex");
     });
   });
+
+  describe("validate", function() {
+    it("should call validate for all models in value[]", function() {
+      // Setup spies
+      persons.value.forEach(function (person) {
+        spyOn(person, "validate");
+      })
+
+      persons.validate();
+
+      persons.value.forEach(function (person) {
+        expect(person.validate).toHaveBeenCalled();
+      })
+    });
+  });
+
+
 
 });
