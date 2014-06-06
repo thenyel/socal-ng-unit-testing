@@ -1,1 +1,6 @@
-["test", "abc", "123"]
+[
+                                                  {name: "AAA"},
+                                                  {name: "BBB"},
+                                                  {name: "CCC"},
+                                                  {name: "DDD"}
+                                                ]

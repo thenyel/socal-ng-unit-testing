@@ -1,18 +1,6 @@
 <div class="container" ng-controller="MainCtrl">
   <h1>Angular Unit Tests</h1>
 
-  <table class="table">
-    <tr>
-      <th>ID</th>
-      <th>Name</th>
-      <th></th>
-    </tr>
-    <tr ng-repeat="person in persons.value">
-      <td><input type="text" ng-model="person.id"></td>
-      <td><input type="text" ng-model="person.name"></td>
-      <td><a ng-click="persons.remove($index)">Remove</a></td>
-    </tr>
-  </table>
+  <my-collection list="persons"></my-collection>
 
-  <a ng-click="persons.add();" class="btn btn-primary">Add</a>
 </div>
