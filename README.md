@@ -19,6 +19,6 @@ Unit Testing - Socal Angular Meetup
 ### Creating files
 * yeoman generators are available to create angular assets with included tests.
 * for example:
-    * `yo angular:factory` to create a blank factory with tests setup
-    * `yo angular:directive` to create a blank directive with tests setup
+    * `yo angular:factory <factoryName>` to create a blank factory with tests setup
+    * `yo angular:directive <directiveName>` to create a blank directive with tests setup
 
